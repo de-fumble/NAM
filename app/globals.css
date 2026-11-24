@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --color-ink: #1d1d1f;
+  --color-ink-2: #424245;
+  --color-mute: #6e6e73;
+  --color-faint: #86868b;
+  --color-line: #d2d2d7;
+  --color-hair: #e8e8ed;
+  --color-paper: #fbfbfd;
+  --color-mist: #f5f5f7;
+  --color-brand: #00875a;
+  --color-brand-ink: #006c48;
+  --color-brand-soft: #e7f5ee;
+  --color-link: #0066cc;
+  --color-gold: #b07d12;
+
+  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.12);
+  --shadow-float: 0 2px 6px rgb(0 0 0 / 0.04), 0 24px 60px -20px rgb(0 0 0 / 0.25);
+
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  --animate-breathe: breathe 1.6s ease-in-out infinite;
+  @keyframes breathe {
+    0%, 100% { opacity: 0.55; transform: scale(0.97); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "kern", "ss01";
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-brand) 22%, transparent);
+  }
+  button, [role="button"] { cursor: pointer; }
+  input, select, textarea { font: inherit; }
+  :focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-link) 70%, transparent);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+@utility shimmer {
+  background: linear-gradient(90deg, #f0f0f3 0%, #f7f7f9 40%, #f0f0f3 80%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+@utility glass {
+  background: color-mix(in srgb, #fbfbfd 72%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+@utility glass-dark {
+  background: color-mix(in srgb, #161617 72%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+@utility text-balance { text-wrap: balance; }
+
+@utility headline {
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+@utility eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-brand);
+}
+
+/* Range input — iOS style */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-ink) var(--fill, 50%), var(--color-hair) var(--fill, 50%));
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0.5px 4px rgb(0 0 0 / 0.12), 0 6px 13px rgb(0 0 0 / 0.12);
+  transition: transform 0.2s var(--ease-spring);
+}
+input[type="range"]::-webkit-slider-thumb:active { transform: scale(1.1); }
+input[type="range"]::-moz-range-thumb {
+  width: 26px; height: 26px; border: 0; border-radius: 999px; background: #fff;
+  box-shadow: 0 0.5px 4px rgb(0 0 0 / 0.12), 0 6px 13px rgb(0 0 0 / 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ───────────── Icons: black on light surfaces, white on dark ones ─────────────
+   Every icon (lucide's `svg.lucide`, plus our own marked `data-icon`) takes its colour from --icon,
+   whatever colour class it was given. Anything with white text (dark buttons, badges, the hero) switches
+   --icon to white for the icons inside it; dark-text elements switch it back. Charts are left alone. */
+:root {
+  --icon: var(--color-ink);
+}
+[class^="text-white"],
+[class*=" text-white"] {
+  --icon: #fff;
+}
+[class^="text-ink"],
+[class*=" text-ink"],
+[class^="text-black"],
+[class*=" text-black"] {
+  --icon: var(--color-ink);
+}
+.group:hover [class*="group-hover:text-white"],
+[class*="hover:text-white"]:hover {
+  --icon: #fff;
+}
+svg.lucide,
+svg[data-icon] {
+  color: var(--icon) !important;
+}
+/* Filled icons (saved heart, ratings, featured star) fill in the same black or white. */
+svg.lucide[class*="fill-"]:not([class*="fill-none"]) {
+  fill: currentColor !important;
+}
